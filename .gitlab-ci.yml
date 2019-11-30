@@ -1,7 +1,11 @@
-image: node
+image: docker:latest
+
+services:
+  - docker:dind
 
 model:
-  script: node setup_predict.js
+  script:
+    - docker build -t $CONTAINER_IMAGE/$DOCKER_IMAGE .
   artifacts:
     paths:
       - data
