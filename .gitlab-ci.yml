@@ -1,3 +1,5 @@
+image: node
+
 model:
   script: node setup_predict.js
   artifacts:

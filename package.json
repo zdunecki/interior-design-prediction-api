@@ -4,7 +4,7 @@
   "description": "",
   "main": "setup_predict.js",
   "scripts": {
-    "setup": "node setup_predict.py"
+    "setup": "node setup_predict.js"
   },
   "repository": {
     "type": "git",
