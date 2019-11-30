@@ -1,0 +1,23 @@
+{
+  "name": "jobs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "setup_predict.js",
+  "scripts": {
+    "setup": "node setup_predict.py"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/topifyresearch/jobs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/topifyresearch/jobs/issues"
+  },
+  "homepage": "https://gitlab.com/topifyresearch/jobs#readme",
+  "dependencies": {
+    "aws-sdk": "^2.580.0",
+    "request": "^2.88.0"
+  }
+}

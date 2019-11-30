@@ -6,6 +6,11 @@ from io import BytesIO
 
 import urllib.request
 
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://localhost:28017")
+db = client["topify"]
+
 labels = [
     "bohemian",
     "classic",
@@ -42,20 +47,43 @@ def predict_process(img):
     return model.predict(pred)
 
 
-url = "https://scontent.fpoz2-1.fna.fbcdn.net/v/t1.0-9/78450257_2561393933914551_5972082700020875264_o.jpg?_nc_cat=100&_nc_ohc=7LQR1ha7bG4AQn7-BeyuiYhwFKvzd3_lL1P_Nm7PLUzN_9VqWJJOweU3g&_nc_ht=scontent.fpoz2-1.fna&oh=7eb51898afa07d075625d0f71b2ea30e&oe=5E7577F8";
-
-
 def run_job():
-    print(5)
-    for _ in range(10):
-        img_pred = load_image(url)
-        result = predict_process(img_pred)
-        values = result[0].tolist()
+    creators = db["creators"].find()
+    predictions_col = db["predictions"];
 
-        # (prediction_score, label)
-        sorted_match = list(map(lambda a: (a[1], labels[a[0]]), enumerate(values)))
+    for creator in creators:
+        images = creator["images"]
+        if not images:
+            continue
 
-        print(sorted_match)
+        for img in images:
+            if not ("url" in img):
+                continue
+
+            url = img["url"]
+
+            img_pred = load_image(url)
+            result = predict_process(img_pred)
+            predictions = result[0].tolist()
+
+            for (index, prediction) in enumerate(predictions):
+                label = labels[index]
+
+                basic_data = {
+                    "label": "interior_style." + label,
+                    "input": url,
+                    "creatorId": creator["id"]
+                }
+
+                existing = predictions_col.find_one(basic_data)
+
+                if existing:
+                    predictions_col.update_one(basic_data, {"$set": {"score": prediction}})
+                else:
+                    new_data = basic_data
+                    new_data["score"] = prediction
+
+                    predictions_col.insert_one(basic_data)
 
 
 def get_args():
