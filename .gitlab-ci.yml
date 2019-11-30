@@ -5,7 +5,8 @@ services:
 
 model:
   script:
-    - docker build .
+    - docker build -t jobs .
+    - docker run jobs
   artifacts:
     paths:
       - data

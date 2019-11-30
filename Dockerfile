@@ -7,4 +7,4 @@ COPY package*.json ./
 RUN yarn
 COPY . .
 
-CMD [ "node", "setup_predict.js" ]
+CMD [ "npm", "run", "setup" ]
