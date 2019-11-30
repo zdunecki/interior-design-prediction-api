@@ -10,7 +10,7 @@ model:
     SPACE_SECRET_ACCESS_KEY: "$SPACE_SECRET_ACCESS_KEY"
     SPACE_URL: "$SPACE_URL"
   script:
-    - docker build -t jobs .
+    - docker build -t jobs --build-arg SPACE_ACCESS_KEY=$SPACE_ACCESS_KEY --build-arg SPACE_BUCKET_NAME=$SPACE_BUCKET_NAME --build-arg SPACE_SECRET_ACCESS_KEY=$SPACE_SECRET_ACCESS_KEY --build-arg SPACE_URL=$SPACE_URL .
     - docker run jobs
   artifacts:
     paths:
