@@ -5,7 +5,7 @@ services:
 
 model:
   script:
-    - docker build -t $CONTAINER_IMAGE/$DOCKER_IMAGE .
+    - docker build .
   artifacts:
     paths:
       - data
