@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 RUN pip install kaggle
 RUN KAGGLE_JSON='{"username":"%s","key":"%s"}\n'
 RUN mkdir -p .kaggle
-RUN printf "$KAGGLE_JSON" "$KAGGLE_USER_NAME" "$KAGGLE_KEY" > ./.kaggle/kaggle.json
+RUN printf "$KAGGLE_JSON" "$KAGGLE_USER_NAME" "$KAGGLE_KEY" > ~/.kaggle/kaggle.json
 RUN chmod 600 ~/.kaggle/kaggle.json
 
 # get prediciton model from kaggle
