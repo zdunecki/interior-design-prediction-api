@@ -46,6 +46,7 @@ def predict_process(img):
 
     return model.predict(pred)
 
+
 # TODO logger
 def run_job():
     creators = db["creators"].find()
