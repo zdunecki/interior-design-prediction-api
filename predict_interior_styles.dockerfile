@@ -27,7 +27,7 @@ RUN rm -rf ~/.kaggle
 # setup python
 COPY predict_interior_styles.py ./
 COPY requirements.txt ./
-RUN pip install -r requirequirements.txt
+RUN pip install -r requirements.txt
 
-CMD [ "python", "predict.py" ]
+CMD [ "python", "predict_interior_styles.py" ]
 
