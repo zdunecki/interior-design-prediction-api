@@ -46,15 +46,16 @@ def predict_process(img):
 
     return model.predict(pred)
 
-
+# TODO logger
 def run_job():
     creators = db["creators"].find()
     predictions_col = db["predictions"]
 
     for creator in creators:
-        images = creator["images"]
-        if not images:
+        if not ("images" in creators):
             continue
+
+        images = creator["images"]
 
         for img in images:
             if not ("url" in img):
