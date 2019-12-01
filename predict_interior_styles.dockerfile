@@ -8,13 +8,11 @@ WORKDIR /usr/src/app
 
 RUN echo $KAGGLE_USER_NAME
 
-## kaggle config
-#RUN pip install kaggle
-#RUN KAGGLE_JSON='{"username":"%s","key":"%s"}\n'
-#RUN mkdir -p ~/.kaggle
-#RUN printf "$KAGGLE_JSON" "$KAGGLE_USER_NAME" "$KAGGLE_KEY" > ~/.kaggle/kaggle.json
-#RUN chmod 600 ~/.kaggle/kaggle.json
-#
+# kaggle config
+RUN pip install kaggle
+RUN mkdir -p ~/.kaggle
+RUN echo "{\"username\": \"${KAGGLE_USER_NAME}\", \"key\": \"${KAGGLE_KEY}\"}" >  ~/.kaggle/kaggle.json
+RUN chmod 600 ~/.kaggle/kaggle.json
 ## get prediciton model from kaggle
 #RUN kaggle datasets download \
 # patrykzdunowski/getartist-models \
