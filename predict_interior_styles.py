@@ -2,13 +2,13 @@ import tensorflow as tf
 import numpy as np
 import json
 import argparse
-from io import BytesIO
-
+import os
 import urllib.request
 
+from io import BytesIO
 from pymongo import MongoClient
 
-client = MongoClient("mongodb://localhost:28017")
+client = MongoClient(os.environ.get('MONGO_URL', 'mongodb://localhost:28017'))
 db = client["topify"]
 
 labels = [
@@ -49,7 +49,7 @@ def predict_process(img):
 
 def run_job():
     creators = db["creators"].find()
-    predictions_col = db["predictions"];
+    predictions_col = db["predictions"]
 
     for creator in creators:
         images = creator["images"]
@@ -61,6 +61,11 @@ def run_job():
                 continue
 
             url = img["url"]
+            already_predicted = predictions_col.find_one({"input": url})
+
+            # TODO: catch case if input already predicted but with specific interior style
+            if already_predicted:
+                continue
 
             img_pred = load_image(url)
             result = predict_process(img_pred)

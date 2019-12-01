@@ -3,16 +3,10 @@ image: docker:latest
 services:
   - docker:dind
 
-model:
+predict:
   variables:
-    SPACE_ACCESS_KEY: "$SPACE_ACCESS_KEY"
-    SPACE_BUCKET_NAME: "SPACE_BUCKET_NAME"
-    SPACE_SECRET_ACCESS_KEY: "$SPACE_SECRET_ACCESS_KEY"
-    SPACE_URL: "$SPACE_URL"
+    KAGGLE_USER_NAME: "$KAGGLE_USER_NAME"
+    KAGGLE_KEY: "$KAGGLE_KEY"
   script:
-    - docker build -t jobs --build-arg SPACE_ACCESS_KEY=$SPACE_ACCESS_KEY --build-arg SPACE_BUCKET_NAME=$SPACE_BUCKET_NAME --build-arg SPACE_SECRET_ACCESS_KEY=$SPACE_SECRET_ACCESS_KEY --build-arg SPACE_URL=$SPACE_URL .
-    - docker run jobs
-  artifacts:
-    paths:
-      - data
-    expire_in: 24 hours
+    - docker build -t predict_interior_styles --build-arg KAGGLE_USER_NAME=$KAGGLE_USER_NAME --build-arg KAGGLE_KEY=$KAGGLE_KEY -f predict_interior_styles.dockerfile .
+    - docker run predict_interior_styles
