@@ -4,9 +4,13 @@ import json
 import argparse
 import os
 import urllib.request
+import logging
+import sys
 
 from io import BytesIO
 from pymongo import MongoClient
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 client = MongoClient(os.environ.get('MONGO_URL', 'mongodb://localhost:28017'))
 db = client["topify"]
@@ -53,7 +57,10 @@ def run_job():
     predictions_col = db["predictions"]
 
     for creator in creators:
-        if not ("images" in creators):
+        creator_logger = logging.getLogger("creatorId: " + creator["id"])
+
+        if not ("images" in creator):
+            creator_logger.debug("creator doesn't have images")
             continue
 
         images = creator["images"]
@@ -67,11 +74,18 @@ def run_job():
 
             # TODO: catch case if input already predicted but with specific interior style
             if already_predicted:
+                creator_logger.debug("image already predicted")
                 continue
 
+            creator_logger.debug("download image")
             img_pred = load_image(url)
+
+            creator_logger.debug("predict")
             result = predict_process(img_pred)
+
             predictions = result[0].tolist()
+
+            creator_logger.debug("insert results to prediction collection")
 
             for (index, prediction) in enumerate(predictions):
                 label = labels[index]
@@ -91,6 +105,10 @@ def run_job():
                     new_data["score"] = prediction
 
                     predictions_col.insert_one(basic_data)
+
+            creator_logger.debug("finished image prediction")
+
+    logging.debug("job finished")
 
 
 def get_args():

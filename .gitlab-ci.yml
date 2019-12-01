@@ -3,6 +3,7 @@ image: docker:latest
 services:
   - docker:dind
 
+#TODO: artifacts with model and python packages
 predict:interior-styles:on-schedule:
   only:
     - schedules
