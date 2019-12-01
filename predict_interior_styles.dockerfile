@@ -13,17 +13,21 @@ RUN pip install kaggle
 RUN mkdir -p ~/.kaggle
 RUN echo "{\"username\": \"${KAGGLE_USER_NAME}\", \"key\": \"${KAGGLE_KEY}\"}" >  ~/.kaggle/kaggle.json
 RUN chmod 600 ~/.kaggle/kaggle.json
-## get prediciton model from kaggle
-#RUN kaggle datasets download \
-# patrykzdunowski/getartist-models \
-# -f interior_styles.h5
-#RUN unzip interior_styles.h5.zip
-#RUN mkdir -p data && mv interior_styles.h5 ./data/model.h5
-#
-## setup python
-#COPY predict_interior_styles.py ./
-#COPY requirements.txt ./
-#RUN pip install -r requirequirements.txt
-#
-#CMD [ "python", "predict.py" ]
+
+# get prediciton model from kaggle
+RUN kaggle datasets download \
+ patrykzdunowski/getartist-models \
+ -f interior_styles.h5
+RUN unzip interior_styles.h5.zip
+RUN mkdir -p data && mv interior_styles.h5 ./data/model.h5
+
+# clear kaggl config
+RUN rm -rf ~/.kaggle
+
+# setup python
+COPY predict_interior_styles.py ./
+COPY requirements.txt ./
+RUN pip install -r requirequirements.txt
+
+CMD [ "python", "predict.py" ]
 
