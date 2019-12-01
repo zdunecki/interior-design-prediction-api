@@ -1,0 +1,4 @@
+tensorflow==2.0
+numpy==1.16.4
+pymongo[tls,srv]==3.9.0
+pillow
