@@ -7,14 +7,22 @@ services:
 
 predict:interior-styles:on-schedule:
   only:
-    - schedules
+    refs:
+      - schedules
+    variables:
+      - $WHICH_SCHEDULE == "predict-interior-styles"
+
   script:
     - docker build -t predict_interior_styles --build-arg KAGGLE_USER_NAME=$KAGGLE_USER_NAME --build-arg KAGGLE_KEY=$KAGGLE_KEY -f predict_interior_styles.dockerfile .
     - docker run -e MONGO_URL=$MONGO_URL predict_interior_styles
 
 mixpanel:events-snapshot:on-schedule:
   only:
-    - schedules
+    refs:
+      - schedules
+    variables:
+      - $WHICH_SCHEDULE == "mixpanel-events-snapshot"
+
   script:
     - docker build -t mixpanel_snapshot_events -f snapshot_mixpanel_events.dockerfile .
     - docker run -e MONGO_URL=$MONGO_URL -e SNAPSHOT_HOUR=$SNAPSHOT_HOUR -e MIXPANEL_SECRET=$MIXPANEL_SECRET mixpanel_snapshot_events
