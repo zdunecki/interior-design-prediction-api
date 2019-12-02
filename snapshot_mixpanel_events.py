@@ -60,4 +60,4 @@ for row in query.send():
 
         mixpanel_col.insert_one(result)
     else:
-        print("No!")
+        print("Event not between snapshot time")
