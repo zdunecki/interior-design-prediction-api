@@ -5,7 +5,7 @@ from pymongo import MongoClient
 
 import os
 
-snapshot_hours_delta = os.environ.get("SNAPSHOT_HOUR", 2)
+snapshot_hours_delta = int(os.environ.get("SNAPSHOT_HOUR", 2))
 api_secret = os.environ.get("MIXPANEL_SECRET", "")
 
 client = MongoClient(os.environ.get('MONGO_URL', 'mongodb://localhost:28017'))
