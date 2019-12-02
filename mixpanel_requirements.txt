@@ -1,0 +1,2 @@
+mixpanel-jql==0.5.1
+simplejson==3.17.0
