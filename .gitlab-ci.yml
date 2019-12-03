@@ -35,5 +35,5 @@ mongo:dump:on-schedule:
       - $WHICH_SCHEDULE == "mongo-dump"
 
   script:
-    - docker build -t mongo_dump -f mongo_dump.dockerfile .
-    - docker run -e DUMP_MONGO_HOST=$DUMP_MONGO_HOST -e DUMP_MONGO_PASSWORD=$DUMP_MONGO_PASSWORD -e DUMP_MONGO_DB=$DUMP_MONGO_DB mongo_dump
+    - docker build -t mongo_dump --build-arg DUMP_MONGO_HOST=$DUMP_MONGO_HOST --build-arg DUMP_MONGO_PASSWORD=$DUMP_MONGO_PASSWORD --build-arg DUMP_MONGO_DB=$DUMP_MONGO_DB -f mongo_dump.dockerfile .
+    - docker run mongo_dump
