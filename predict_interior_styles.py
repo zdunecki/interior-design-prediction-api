@@ -16,6 +16,8 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 client = MongoClient(os.environ.get('MONGO_URL', 'mongodb://localhost:28017'))
 db = client["topify"]
 
+had_troubles_with_downloading_image = False
+
 labels = [
     "bohemian",
     "classic",
@@ -50,6 +52,7 @@ def predict_process(img):
 
 # TODO logger
 def run_job():
+    global had_troubles_with_downloading_image
     creators = db["creators"].find()
     predictions_col = db["predictions"]
 
@@ -81,6 +84,7 @@ def run_job():
             except urllib.error.HTTPError as e:
                 warnings.warn("HTTP error, cannot predict this image: " + url)
                 warnings.warn(str(e))
+                had_troubles_with_downloading_image = True
                 continue
 
             creator_logger.debug("predict")
@@ -144,3 +148,7 @@ if __name__ == '__main__':
         model = tf.keras.models.load_model(args.model_path)
 
     run_job()
+
+    if had_troubles_with_downloading_image:
+        print("Job has troubles with downloading images. Check full logs.")
+        sys.exit(1)

@@ -12,6 +12,7 @@ predict:interior-styles:on-schedule:
     variables:
       - $WHICH_SCHEDULE == "predict-interior-styles"
 
+  allow_failure: true #TODO: not ideal solution but it catch case if script catch our errors. it helps notify us that something happened.
   script:
     - docker build -t predict_interior_styles --build-arg KAGGLE_USER_NAME=$KAGGLE_USER_NAME --build-arg KAGGLE_KEY=$KAGGLE_KEY -f predict_interior_styles.dockerfile .
     - docker run -e MONGO_URL=$MONGO_URL predict_interior_styles
