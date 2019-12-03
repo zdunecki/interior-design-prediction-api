@@ -53,7 +53,7 @@ def predict_process(img):
 # TODO logger
 def run_job():
     global had_troubles_with_downloading_image
-    creators = db["creators"].find()
+    creators = db["creators"].find({"creatorKind": "ARCHITECT"})
     predictions_col = db["predictions"]
 
     for creator in creators:
