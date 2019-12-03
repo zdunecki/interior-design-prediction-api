@@ -26,3 +26,14 @@ mixpanel:events-snapshot:on-schedule:
   script:
     - docker build -t mixpanel_snapshot_events -f snapshot_mixpanel_events.dockerfile .
     - docker run -e MONGO_URL=$MONGO_URL -e SNAPSHOT_HOUR=$SNAPSHOT_HOUR -e MIXPANEL_SECRET=$MIXPANEL_SECRET mixpanel_snapshot_events
+
+mongo:dump:on-schedule:
+  only:
+    refs:
+      - schedules
+    variables:
+      - $WHICH_SCHEDULE == "mongo-dump"
+
+  script:
+    - docker build -t mongo_dump -f mongo_dump.dockerfile .
+    - docker run -e DUMP_MONGO_HOST=$DUMP_MONGO_HOST -e DUMP_MONGO_PASSWORD=$DUMP_MONGO_PASSWORD -e DUMP_MONGO_DB=$DUMP_MONGO_DB mongo_dump
