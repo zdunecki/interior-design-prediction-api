@@ -36,4 +36,5 @@ mongo:dump:on-schedule:
 
   script:
     - docker build -t mongo_dump --build-arg DUMP_MONGO_HOST=$DUMP_MONGO_HOST --build-arg DUMP_MONGO_PASSWORD=$DUMP_MONGO_PASSWORD --build-arg DUMP_MONGO_DB=$DUMP_MONGO_DB -f mongo_dump.dockerfile .
-    - docker run mongo_dump
+    - docker run -e SPACE_REGION=$SPACE_REGION -e SPACE_URL=$SPACE_URL -e SPACE_ACCESS_KEY_ID=$SPACE_ACCESS_KEY_ID -e SPACE_ACCESS_SECRET_KEY=$SPACE_ACCESS_SECRET_KEY -e SPACE_BUCKET_NAME=$SPACE_BUCKET_NAME mongo_dump
+
