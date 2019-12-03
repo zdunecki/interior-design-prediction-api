@@ -6,6 +6,7 @@ import os
 import urllib.request
 import logging
 import sys
+import warnings
 
 from io import BytesIO
 from pymongo import MongoClient
@@ -32,14 +33,10 @@ labels = [
 
 
 def load_image(endpoint):
-    try:
-        with urllib.request.urlopen(endpoint) as u:
-            img = tf.keras.preprocessing.image.load_img(BytesIO(u.read()), target_size=(150, 150))
+    with urllib.request.urlopen(endpoint) as u:
+        img = tf.keras.preprocessing.image.load_img(BytesIO(u.read()), target_size=(150, 150))
 
-            return tf.keras.preprocessing.image.img_to_array(img)
-
-    except urllib.error.HTTPError as e:
-        print("ERROR")
+        return tf.keras.preprocessing.image.img_to_array(img)
 
 
 def predict_process(img):
@@ -78,7 +75,13 @@ def run_job():
                 continue
 
             creator_logger.debug("download image")
-            img_pred = load_image(url)
+
+            try:
+                img_pred = load_image(url)
+            except urllib.error.HTTPError as e:
+                warnings.warn("HTTP error, cannot predict this image: " + url)
+                warnings.warn(str(e))
+                continue
 
             creator_logger.debug("predict")
             result = predict_process(img_pred)
