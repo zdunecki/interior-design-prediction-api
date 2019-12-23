@@ -1,0 +1,1 @@
+curl -H 'Accept: application/json' -H "Authorization: Bearer ${API_TOKEN}" https://qa-lambda.getartist.pl/api/jobs/mixpanel/snapshot_events

@@ -1,51 +1,12 @@
-image: docker:latest
-
-services:
-  - docker:dind
-
-#TODO: artifacts with model and python packages
-
-predict:interior-styles:on-schedule:
+qa-mixpanel:events-snapshot:on-schedule:
   only:
     refs:
       - schedules
     variables:
-      - $WHICH_SCHEDULE == "predict-interior-styles"
-
-  allow_failure: true #TODO: not ideal solution but it catch case if script catch our errors. it helps notify us that something happened.
+      - $WHICH_SCHEDULE == "qa-mixpanel-events-snapshot"
 
   environment:
-    name: "production"
+    name: "qa"
 
   script:
-    - docker build -t predict_interior_styles --build-arg KAGGLE_USER_NAME=$KAGGLE_USER_NAME --build-arg KAGGLE_KEY=$KAGGLE_KEY -f predict_interior_styles.dockerfile .
-    - docker run -e MONGO_URL=$MONGO_URL predict_interior_styles
-
-mixpanel:events-snapshot:on-schedule:
-  only:
-    refs:
-      - schedules
-    variables:
-      - $WHICH_SCHEDULE == "mixpanel-events-snapshot"
-
-  environment:
-    name: "production"
-
-  script:
-    - docker build -t mixpanel_snapshot_events -f snapshot_mixpanel_events.dockerfile .
-    - docker run -e MONGO_URL=$MONGO_URL -e SNAPSHOT_HOUR=$SNAPSHOT_HOUR -e MIXPANEL_SECRET=$MIXPANEL_SECRET mixpanel_snapshot_events
-
-mongo:dump:on-schedule:
-  only:
-    refs:
-      - schedules
-    variables:
-      - $WHICH_SCHEDULE == "mongo-dump"
-
-  environment:
-    name: "production"
-
-  script:
-    - docker build -t mongo_dump --build-arg DUMP_MONGO_HOST=$DUMP_MONGO_HOST --build-arg DUMP_MONGO_PASSWORD=$DUMP_MONGO_PASSWORD --build-arg DUMP_MONGO_DB=$DUMP_MONGO_DB -f mongo_dump.dockerfile .
-    - docker run -e SPACE_REGION=$SPACE_REGION -e SPACE_URL=$SPACE_URL -e SPACE_ACCESS_KEY_ID=$SPACE_ACCESS_KEY_ID -e SPACE_ACCESS_SECRET_KEY=$SPACE_ACCESS_SECRET_KEY -e SPACE_BUCKET_NAME=$SPACE_BUCKET_NAME mongo_dump
-
+    - ./mixpaneL_snapshot_events.sh
