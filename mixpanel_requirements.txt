@@ -1,3 +1,0 @@
-mixpanel-jql==0.5.1
-simplejson==3.17.0
-pymongo[tls,srv]==3.9.0
